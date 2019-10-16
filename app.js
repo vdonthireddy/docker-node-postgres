@@ -6,32 +6,33 @@ var app = express();
 const { Pool, Client } = require('pg')
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'mypostgres',
-    database: 'postgres',
-    password: 'vijay',
-    port: 5432,
+    user: process.env.POSTGRES_USER,
+    host: process.env.POSTGRES_HOST,
+    database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD,
+    port: process.env.POSTGRES_PORT,
   })
 
   const client = new Client({
-    user: 'postgres',
-    host: 'mypostgres',
-    database: 'vjdb',
-    password: 'vijay',
-    port: 5432,
+    user: process.env.POSTGRES_USER,
+    host: process.env.POSTGRES_HOST,
+    database: process.env.POSTGRES_NEWDB,
+    password: process.env.POSTGRES_PASSWORD,
+    port: process.env.POSTGRES_PORT,
   })
     
 app.get("/", (req, res) => {
-    res.send("Hello Docker!!! - Vijay\n");
+    res.send("Hello Docker 20191016161840!!! - Vijay\n");
 });
 
 app.get("/createdb", (req, res) => {
     try {
-        pool.query('create database vjdb;', (error, results) => {
+        pool.query('create database ' + process.env.POSTGRES_NEWDB + ';', (error, results) => {
             if (error) {
                 console.log(error);
             } else {
                 client.connect();
+                console.log('connected to database: ' + process.env.POSTGRES_NEWDB);
                 res.send(results.rows);
             }    
         });
@@ -42,21 +43,21 @@ app.get("/createdb", (req, res) => {
 
 app.get("/insert", (req, res) => {
     try {
-        client.query('create table table1(id int, age int);', (error, results) => {
+        client.query('create table employee(id int, empnumber int);', (error, results) => {
             if (error) {
                 console.log(error);
             } else {
                 console.log(results.rows);
             }
         });
-        client.query('insert into table1 values(1, 40);', (error, results) => {
+        client.query('insert into employee values(1, 4650);', (error, results) => {
             if (error) {
                 console.log(error);
             } else {
                 console.log(results.rows);
             }
         });
-        client.query('insert into table1 values(2, 30);', (error, results) => {
+        client.query('insert into employee values(2, 3120);', (error, results) => {
             if (error) {
                 console.log(error);
             } else {
@@ -72,7 +73,7 @@ app.get("/insert", (req, res) => {
 
 app.get("/get", (req, res) => {
     try {
-        client.query('SELECT * from table1;', (error, results) => {
+        client.query('SELECT * from employee;', (error, results) => {
             if (error) {
                 console.log(error);
             } else {
