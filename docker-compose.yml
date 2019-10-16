@@ -1,0 +1,17 @@
+version: '2'
+services:
+  mypostgres:
+    image: "postgres:9.4"
+    environment:
+     POSTGRES_PASSWORD: vijay
+     POSTGRES_USER: postgres
+  web:
+    build: .
+    command: npm start
+    depends_on:
+      - mypostgres
+    volumes:
+      - ./src:/usr/app/
+      - ./src/node_modules:/usr/app/node_modules
+    ports:
+      - 8080:8080
